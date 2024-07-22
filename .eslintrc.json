@@ -96,6 +96,10 @@
               {
                 "sourceTag": "domain:booking",
                 "onlyDependOnLibsWithTags": ["domain:booking", "domain:shared"]
+              },
+              {
+                "sourceTag": "domain:luggage",
+                "onlyDependOnLibsWithTags": ["domain:luggage", "domain:shared"]
               }
             ]
           }

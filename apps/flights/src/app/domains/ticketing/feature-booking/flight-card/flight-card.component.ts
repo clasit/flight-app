@@ -51,11 +51,11 @@ export class FlightCardComponent {
     // Dirty Hack used to visualize the change detector
     this.element.nativeElement.firstChild.style.backgroundColor = 'crimson';
 
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        this.element.nativeElement.firstChild.style.backgroundColor = 'white';
-      }, 1000);
-    });
+    // this.zone.runOutsideAngular(() => {
+    setTimeout(() => {
+      this.element.nativeElement.firstChild.style.backgroundColor = 'white';
+    }, 1000);
+    // });
 
     return null;
   }

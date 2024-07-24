@@ -1,4 +1,12 @@
-import { Component, ElementRef, NgZone, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  NgZone,
+  inject,
+  signal,
+  computed,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
@@ -19,19 +27,27 @@ export class FlightSearchComponent {
 
   private flightService = inject(FlightService);
 
-  from = 'Paris';
-  to = 'London';
-  flights: Array<Flight> = [];
+  from = signal('Paris');
+  to = signal('London');
+  flights = signal<Array<Flight>>([]);
 
-  basket: Record<number, boolean> = {
+  flightsRoute = computed(() => `${this.from()} -> ${this.to()}`);
+
+  basket = signal<Record<number, boolean>>({
     3: true,
     5: true,
-  };
+  });
+
+  constructor() {
+    effect(() => {
+      console.log(this.flightsRoute());
+    });
+  }
 
   search(): void {
-    this.flightService.find(this.from, this.to).subscribe({
+    this.flightService.find(this.from(), this.to()).subscribe({
       next: (flights) => {
-        this.flights = flights;
+        this.flights.set(flights);
       },
       error: (errResp) => {
         console.error('Error loading flights', errResp);
@@ -40,7 +56,7 @@ export class FlightSearchComponent {
   }
 
   delay(): void {
-    this.flights = this.toFlightsWithDelays(this.flights, 15);
+    this.flights.set(this.toFlightsWithDelays(this.flights(), 15));
   }
 
   toFlightsWithDelays(flights: Flight[], delay: number): Flight[] {
@@ -56,6 +72,10 @@ export class FlightSearchComponent {
     const newFlight = { ...oldFlight, date: newDate.toISOString() };
 
     return [newFlight, ...flights.slice(1)];
+  }
+
+  updateBasket(flightId: number, selected: boolean) {
+    this.basket.update((value) => ({ ...value, [flightId]: selected }));
   }
 
   blink() {

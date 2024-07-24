@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -20,6 +21,7 @@ import { initFlight } from '@demo/ticketing/data';
   imports: [CommonModule, CityPipe, StatusToggleComponent, RouterLink],
   templateUrl: './flight-card.component.html',
   styleUrls: ['./flight-card.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlightCardComponent {
   private element = inject(ElementRef);
@@ -51,11 +53,11 @@ export class FlightCardComponent {
     // Dirty Hack used to visualize the change detector
     this.element.nativeElement.firstChild.style.backgroundColor = 'crimson';
 
-    // this.zone.runOutsideAngular(() => {
-    setTimeout(() => {
-      this.element.nativeElement.firstChild.style.backgroundColor = 'white';
-    }, 1000);
-    // });
+    this.zone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this.element.nativeElement.firstChild.style.backgroundColor = 'white';
+      }, 1000);
+    });
 
     return null;
   }

@@ -7,6 +7,7 @@ import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
 import { NextFlightsModule } from '@demo/ticketing/feature-next-flights';
 import { LogLevel, provideLogger, withColor } from '@demo/shared/util-logger';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -15,6 +16,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(NextFlightsModule),
     importProvidersFrom(MatDialogModule),
 
+    provideAnimations(),
     provideLogger(
       {
         level: LogLevel.DEBUG,
